@@ -1,8 +1,12 @@
+import os
+# 放在脚本最开头
+os.environ["HF_ENDPOINT"] = "https://hf-mirror.com"
 import streamlit as st
 import dill as pickle
 import numpy as np
 import pandas as pd
 from pathlib import Path
+from huggingface_hub import hf_hub_download
 
 # ===================== Page Configuration =====================
 st.set_page_config(
@@ -14,8 +18,10 @@ st.set_page_config(
 # ===================== Load TabPFN Model =====================
 @st.cache_resource
 def load_model():
-    # Please replace with your actual TabPFN model file path
-    model_path = Path("cesarean_tabpfn_model.pkl")
+    repo_id = "xiao123wei/Postpartum-Hemorrhage-Risk-Prediction-Calculator"
+    model_filename = "cesarean_tabpfn_model.pkl"
+    # 云端自动下载模型
+    model_path = hf_hub_download(repo_id=repo_id, filename=model_filename)
     with open(model_path, "rb") as f:
         data = pickle.load(f)
     return data
