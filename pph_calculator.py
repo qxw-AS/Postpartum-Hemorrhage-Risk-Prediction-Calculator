@@ -1,6 +1,7 @@
 import os
 # 放在脚本最开头
 os.environ["HF_ENDPOINT"] = "https://hf-mirror.com"
+import requests
 import streamlit as st
 import dill as pickle
 import numpy as np
@@ -18,11 +19,19 @@ st.set_page_config(
 # ===================== Load TabPFN Model =====================
 @st.cache_resource
 def load_model():
-    repo_id = "xiao123wei/Postpartum-Hemorrhage-Risk-Prediction-Calculator"
     model_filename = "cesarean_tabpfn_model.pkl"
-    # 云端自动下载模型
-    model_path = hf_hub_download(repo_id=repo_id, filename=model_filename)
-    with open(model_path, "rb") as f:
+    # Streamlit临时目录存放模型
+    cache_path = f"/tmp/{model_filename}"
+
+    if not os.path.exists(cache_path):
+        # HF原始直链（镜像地址）
+        url = "https://hf-mirror.com/xiao123wei/Postpartum-Hemorrhage-Risk-Prediction-Calculator/resolve/main/cesarean_tabpfn_model.pkl"
+        resp = requests.get(url, timeout=600)
+        resp.raise_for_status()
+        with open(cache_path, "wb") as f:
+            f.write(resp.content)
+
+    with open(cache_path, "rb") as f:
         data = pickle.load(f)
     return data
 
