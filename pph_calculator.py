@@ -47,7 +47,7 @@ thresh_high = model_data["threshold_high"]
 
 # ===================== Page Header =====================
 st.title("Postpartum Hemorrhage Risk Prediction Calculator")
-st.caption("Cesarean Delivery Cohort | TabPFN Model | External Validation AUC = 0.767")
+st.caption("Cesarean Delivery Cohort | TabPFN Model | External Validation AUC = 0.773")
 st.markdown("---")
 
 st.markdown("""
